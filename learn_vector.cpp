@@ -36,7 +36,8 @@ int main(int argc, char *argv[])
     Show(vecPosCpy);
     vector<int> vecN(3, 1); // vector<int> vecN(3)
     Show(vecN);
-    vector<vector<int>> vecDup(3, vecInt); // 二维数组  
+    vector<vector<int>> vecDup(3, vecInt); // 二维数组 
+    // vector<vector<int>> vecDup(3, vector<int>(3, 0)); // 初始化3 x 3矩阵为0
     ShowDup(vecDup);
 
     // 访问
