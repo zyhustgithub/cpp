@@ -2,6 +2,7 @@
 #include <map>
 #include <string>
 
+/*******************************************************************************/
 typedef void *(*instance)();
 std::map<std::string, instance>& GetClass()
 {
@@ -28,9 +29,10 @@ public:
         std::cout << "[ClassFactory]->Register Class: " << className << std::endl;
     }
 };
+/*******************************************************************************/
 
 /*******************************************************************************/
-/* 静态注册类 */
+/* 静态注册 */
 // class Register {
 // public:
 //     Register(const std::string className, instance ins)
@@ -53,7 +55,6 @@ public:
 /*******************************************************************************/
 
 /*******************************************************************************/
-/* 运行时注册类 */
 template<typename T>
 void *Instance()
 {
@@ -68,15 +69,17 @@ public:
     }
 };
 
-#define REGISTER(className) \
-    static const Register Register##className(#className, Instance<className>)
-
+// 静态注册
 // #define REGISTER(className) \
-//     ClassFactory::RegisterClass(#className, Instance<className>)
-/*******************************************************************************/
+//     static const Register Register##className(#className, Instance<className>)
+
+// 运行时注册
+#define REGISTER(className) \
+    ClassFactory::RegisterClass(#className, Instance<className>)
 
 #define INSTANCE(className) \
     ClassFactory::GetInstance(className)
+/*******************************************************************************/
 
 class TestA {
 public:
@@ -96,12 +99,14 @@ public:
     }
 };
 
+// 静态注册位置
 // REGISTER(TestA);
 // REGISTER(TestB);
 
 int main(int argc, char *argv[])
 {
     std::cout << GetClass().size() << std::endl;
+    // 运行时注册位置
     REGISTER(TestA);
     REGISTER(TestB);
     TestA *testClassA = (TestA *)INSTANCE("TestA");
