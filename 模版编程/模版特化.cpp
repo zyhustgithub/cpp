@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017-2018 RTFSC All rights reserved.
+ * Copyright (C) 2020-2020 RTFSC All rights reserved.
  * Author:zengyong
  * Date:2020-12-05
  * Description:具体接口实现
@@ -11,7 +11,7 @@
 #include <deque>
 
 /***********************************************************************/
-// 模版设置模版参数
+// 主模版
 template<typename T, 
     template<typename E, typename Allocator = std::allocator<E>>
     class ContainerType = std::vector>
@@ -44,6 +44,7 @@ private:
 /***********************************************************************/
 
 /***********************************************************************/
+// 自定义数组类型
 template<typename T, typename Allocator = std::allocator<T>>
 struct MyArray
 {
@@ -124,7 +125,7 @@ T MyArray<T, Allocator>::pop()
 /***********************************************************************/
 
 /***********************************************************************/
-// 模版设置模版参数
+// 偏特化
 template<typename T>
 struct TemplateArgStack<T, MyArray>
 {
@@ -144,13 +145,40 @@ private:
 };
 /***********************************************************************/
 
+/***********************************************************************/
+// 全特化
+template<>
+struct TemplateArgStack<std::string, MyArray>
+{
+    void push(const std::string& elem)
+    {
+        std::cout << "TemplateArgStack<std::string, MyArray>:push()" << std::endl;
+        elems.append(elem);
+    }
+
+    std::string pop()
+    {
+        auto elem = elems.pop();
+        return elem;
+    }
+
+private:
+    MyArray<std::string> elems;
+};
+/***********************************************************************/
+
 int main()
 {
     /***********************************************************************/
-    TemplateArgStack<int, MyArray> myArrayTemplateArgStack;
-    myArrayTemplateArgStack.push(1);
-    myArrayTemplateArgStack.push(2);
-    std::cout << myArrayTemplateArgStack.pop() << std::endl;
+    TemplateArgStack<int, MyArray> intMyArrayTemplateArgStack;
+    intMyArrayTemplateArgStack.push(1);
+    intMyArrayTemplateArgStack.push(2);
+    std::cout << intMyArrayTemplateArgStack.pop() << std::endl;
+
+    TemplateArgStack<std::string, MyArray> strMyArrayTemplateArgStack;
+    strMyArrayTemplateArgStack.push("mr");
+    strMyArrayTemplateArgStack.push("zy");
+    std::cout << strMyArrayTemplateArgStack.pop() << std::endl;
 
     TemplateArgStack<int, std::deque> intTemplateArgStack;
     intTemplateArgStack.push(3);
